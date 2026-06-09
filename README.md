@@ -64,10 +64,16 @@ To wire it up (Firestore + Google Auth):
 
 | Collection | Contents | Access |
 | --- | --- | --- |
-| `scores` | `{ name, score, createdAt }` | public read + create |
-| `claims/{choreId}` | `{ name, ts }` | public read + write |
-| `photos/{slotId}` | `{ url, ts }` (WebP data URL) | public read + write |
+| `scores` | `{ name, score, createdAt }` | public read + create (the leaderboard is public) |
+| `claims/{choreId}` | `{ name, ts }` | guest write (sign up); **host-only** read |
+| `photos/{slotId}` | `{ url, ts }` (WebP data URL) | public read + write (Wall of Fame is public) |
 | `rsvps` | `{ name, email, count, putting, note, createdAt }` | guest create; **host-only** read |
+
+> **Sign-up privacy:** anyone can RSVP, claim a chore, or post a score, but the
+> *lists* of who RSVP'd and who claimed which chore are visible only to
+> signed-in hosts (in the Host Dashboard). Because guests can't see existing
+> chore claims, two people may grab the same job — the hosts reconcile overlaps
+> from the dashboard.
 
 ## Deployment (GitHub Pages)
 
