@@ -2,10 +2,10 @@ rules_version = '2';
 
 // Security rules for the Dahlheimer Cup site.
 //
-// Guests are anonymous (no login), so the public collections allow open
-// reads/writes — fine for a one-day private party invite. RSVPs are
-// write-only for guests and readable ONLY by signed-in hosts, so guest
-// emails/notes aren't exposed to everyone.
+// Guests are anonymous (no login). Anyone can submit an RSVP, sign up for a
+// chore, or post a putting score. But the sign-up *lists* — RSVPs and chore
+// claims — are readable ONLY by signed-in hosts, so guests' names/emails/notes
+// aren't exposed to everyone. The leaderboard and Wall of Fame stay public.
 //
 // Deploy with:  firebase deploy --only firestore:rules
 service cloud.firestore {
@@ -31,9 +31,10 @@ service cloud.firestore {
       allow update: if false;
     }
 
-    // Chore claims — anyone can claim or release a job.
+    // Chore claims — anyone can sign up for a job, but only hosts can see who
+    // signed up for what (the sign-up list is host-only, like RSVPs).
     match /claims/{choreId} {
-      allow read: if true;
+      allow read: if isHost();
       allow write: if true;
     }
 

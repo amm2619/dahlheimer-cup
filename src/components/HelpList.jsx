@@ -1,9 +1,68 @@
 import { useState } from 'react';
 import { CHORES } from '../data.js';
 
-function ChoreCard({ chore, claimedBy, onClaim, onRelease }) {
+const claimedBox = {
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'space-between',
+  gap: 8,
+  background: '#143d2b',
+  borderRadius: 10,
+  padding: '10px 14px',
+};
+
+function ClaimForm({ onClaim }) {
   const [draft, setDraft] = useState('');
-  const isClaimed = !!claimedBy;
+  return (
+    <div className="no-print" style={{ display: 'flex', gap: 8, width: '100%' }}>
+      <input
+        value={draft}
+        onChange={(e) => setDraft(e.target.value)}
+        placeholder="Your name"
+        style={{
+          flex: '1 1 auto',
+          minWidth: 0,
+          background: '#fff',
+          border: '1px solid #d9cfb4',
+          color: '#2b2417',
+          fontSize: 17,
+          padding: '10px 12px',
+          borderRadius: 9,
+          outline: 'none',
+        }}
+      />
+      <button
+        onClick={() => {
+          const n = draft.trim();
+          if (!n) return;
+          onClaim(n);
+          setDraft('');
+        }}
+        style={{
+          flex: '0 0 auto',
+          background: '#143d2b',
+          color: '#f5efdf',
+          border: 'none',
+          fontWeight: 600,
+          fontSize: 14,
+          padding: '10px 14px',
+          borderRadius: 9,
+          cursor: 'pointer',
+          whiteSpace: 'nowrap',
+        }}
+      >
+        I've got it
+      </button>
+    </div>
+  );
+}
+
+function ChoreCard({ chore, isHost, claimedBy, mineName, onClaim, onRelease }) {
+  // Hosts see the real claim state from the database. Guests never see who
+  // signed up (the list is host-only); they just see a claim form, plus a
+  // local confirmation for jobs they grabbed in this session.
+  const showClaimed = isHost ? !!claimedBy : false;
+  const isClaimed = showClaimed; // controls the green "tasteful" card tint
 
   return (
     <div
@@ -40,24 +99,14 @@ function ChoreCard({ chore, claimedBy, onClaim, onRelease }) {
       </div>
       <p style={{ fontSize: 17, lineHeight: 1.5, color: '#423c2b', margin: '0 0 14px', minHeight: 44 }}>{chore.detail}</p>
 
-      {isClaimed ? (
-        <div
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            gap: 8,
-            background: '#143d2b',
-            borderRadius: 10,
-            padding: '10px 14px',
-          }}
-        >
+      {isHost && claimedBy ? (
+        <div style={claimedBox}>
           <div style={{ color: '#f5efdf', fontSize: 17 }}>
             <span style={{ color: '#d8b24a', fontWeight: 600 }}>✓ {claimedBy}</span> has this
           </div>
           <button
             className="no-print"
-            onClick={() => onRelease(chore.id)}
+            onClick={onRelease}
             style={{
               background: 'transparent',
               border: '1px solid rgba(245,239,223,0.3)',
@@ -71,53 +120,25 @@ function ChoreCard({ chore, claimedBy, onClaim, onRelease }) {
             Release
           </button>
         </div>
-      ) : (
-        <div className="no-print" style={{ display: 'flex', gap: 8, width: '100%' }}>
-          <input
-            value={draft}
-            onChange={(e) => setDraft(e.target.value)}
-            placeholder="Your name"
-            style={{
-              flex: '1 1 auto',
-              minWidth: 0,
-              background: '#fff',
-              border: '1px solid #d9cfb4',
-              color: '#2b2417',
-              fontSize: 17,
-              padding: '10px 12px',
-              borderRadius: 9,
-              outline: 'none',
-            }}
-          />
-          <button
-            onClick={() => {
-              const n = draft.trim();
-              if (!n) return;
-              onClaim(chore.id, n);
-              setDraft('');
-            }}
-            style={{
-              flex: '0 0 auto',
-              background: '#143d2b',
-              color: '#f5efdf',
-              border: 'none',
-              fontWeight: 600,
-              fontSize: 14,
-              padding: '10px 14px',
-              borderRadius: 9,
-              cursor: 'pointer',
-              whiteSpace: 'nowrap',
-            }}
-          >
-            I've got it
-          </button>
+      ) : mineName ? (
+        <div style={claimedBox}>
+          <div style={{ color: '#f5efdf', fontSize: 17 }}>
+            <span style={{ color: '#d8b24a', fontWeight: 600 }}>✓ {mineName}</span> — you're signed up!
+          </div>
         </div>
+      ) : (
+        <ClaimForm onClaim={onClaim} />
       )}
     </div>
   );
 }
 
 export default function HelpList({ party }) {
+  const isHost = !!party.hostUser;
+  // Jobs this guest grabbed this session → { choreId: name }. Guests can't read
+  // the claim list back, so we remember locally just to confirm their own pick.
+  const [mine, setMine] = useState({});
+
   return (
     <section id="help" data-screen-label="Help List" style={{ scrollMarginTop: 70, padding: '20px 40px 72px' }}>
       <div style={{ textAlign: 'center', marginBottom: 14 }}>
@@ -136,8 +157,8 @@ export default function HelpList({ party }) {
           Claim Your Job
         </h2>
         <p style={{ fontStyle: 'italic', fontSize: 18, color: '#4c4736', maxWidth: 660, margin: '10px auto 0' }}>
-          Everyone always asks how they can help — so here it is. Pop your name on a job below (it saves
-          automatically), or peel a sticker off the printed sheet at the door and wear your duty with pride.
+          Everyone always asks how they can help — so here it is. Pop your name on a job below and the hosts will see
+          you've got it. (No need to check what's taken — the hosts keep the master list and will sort out any overlap.)
         </p>
       </div>
 
@@ -154,9 +175,14 @@ export default function HelpList({ party }) {
           <ChoreCard
             key={c.id}
             chore={c}
+            isHost={isHost}
             claimedBy={party.claims[c.id] || ''}
-            onClaim={party.claim}
-            onRelease={party.release}
+            mineName={mine[c.id] || ''}
+            onClaim={(name) => {
+              party.claim(c.id, name);
+              if (!isHost) setMine((prev) => ({ ...prev, [c.id]: name }));
+            }}
+            onRelease={() => party.release(c.id)}
           />
         ))}
       </div>

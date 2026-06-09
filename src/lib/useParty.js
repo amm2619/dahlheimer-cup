@@ -28,16 +28,11 @@ export default function useParty() {
     if (!live) return undefined;
     const unsubs = [];
 
+    // The leaderboard (scores) and Wall of Fame (photos) are public, so these
+    // subscriptions run for everyone. Chore claims are host-only — see below.
     unsubs.push(
       onSnapshot(query(collection(db, 'scores'), orderBy('score', 'desc')), (snap) => {
         setScores(snap.docs.map((d) => ({ id: d.id, ...d.data() })));
-      }, () => {})
-    );
-    unsubs.push(
-      onSnapshot(collection(db, 'claims'), (snap) => {
-        const next = {};
-        snap.forEach((d) => { next[d.id] = (d.data() || {}).name || ''; });
-        setClaims(next);
       }, () => {})
     );
     unsubs.push(
@@ -60,13 +55,26 @@ export default function useParty() {
     });
   }, [live]);
 
+  // RSVPs and chore claims are the host-only sign-up lists: subscribe only
+  // when a host is signed in (guests are denied reads by the Firestore rules).
   useEffect(() => {
-    if (!live || !hostUser) { setRsvps([]); return undefined; }
-    return onSnapshot(
+    if (!live || !hostUser) { setRsvps([]); setClaims({}); return undefined; }
+    const unsubs = [];
+    unsubs.push(onSnapshot(
       query(collection(db, 'rsvps'), orderBy('createdAt', 'desc')),
       (snap) => setRsvps(snap.docs.map((d) => ({ id: d.id, ...d.data() }))),
       (err) => setFbError('Cannot read RSVPs (' + (err.code || 'error') + ')')
-    );
+    ));
+    unsubs.push(onSnapshot(
+      collection(db, 'claims'),
+      (snap) => {
+        const next = {};
+        snap.forEach((d) => { next[d.id] = (d.data() || {}).name || ''; });
+        setClaims(next);
+      },
+      () => {}
+    ));
+    return () => unsubs.forEach((u) => u());
   }, [live, hostUser]);
 
   // ---- Leaderboard ----
