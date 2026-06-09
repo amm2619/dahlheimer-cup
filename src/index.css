@@ -1,0 +1,25 @@
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+body { background: #143d2b; -webkit-font-smoothing: antialiased; }
+input, textarea, button { font-family: inherit; }
+
+/* Placeholder color inside the dark-green sections (RSVP, leaderboard, cup). */
+#rsvp input::placeholder,
+#rsvp textarea::placeholder,
+#cup input::placeholder { color: #d9cca2; opacity: 1; }
+
+@keyframes flagwave {
+  0%, 100% { transform: skewX(0deg) scaleX(1); }
+  50% { transform: skewX(-7deg) scaleX(0.96); }
+}
+@keyframes floaty {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+}
+
+@media print {
+  body { background: #ffffff; }
+  .no-print { display: none !important; }
+  section { break-inside: avoid; }
+  * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+}
