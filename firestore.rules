@@ -1,0 +1,54 @@
+rules_version = '2';
+
+// Security rules for the Dalhemier Cup site.
+//
+// Guests are anonymous (no login), so the public collections allow open
+// reads/writes — fine for a one-day private party invite. RSVPs are
+// write-only for guests and readable ONLY by signed-in hosts, so guest
+// emails/notes aren't exposed to everyone.
+//
+// Deploy with:  firebase deploy --only firestore:rules
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function isHost() {
+      return request.auth != null
+        && request.auth.token.email_verified == true
+        && request.auth.token.email.lower() in [
+          'chris.foster@gmail.com',
+          'amm2619@gmail.com',
+          'brian.dahlheimer@gmail.com'
+        ];
+    }
+
+    // Live leaderboard — anyone can read and post a score.
+    match /scores/{id} {
+      allow read: if true;
+      allow create: if request.resource.data.name is string
+                    && request.resource.data.name.size() <= 80
+                    && request.resource.data.score is number;
+      allow delete: if true;
+      allow update: if false;
+    }
+
+    // Chore claims — anyone can claim or release a job.
+    match /claims/{choreId} {
+      allow read: if true;
+      allow write: if true;
+    }
+
+    // Wall of Fame photos — anyone can add or clear a photo.
+    match /photos/{slotId} {
+      allow read: if true;
+      allow write: if true;
+    }
+
+    // RSVPs — guests may submit; only hosts may read or modify.
+    match /rsvps/{id} {
+      allow create: if request.resource.data.name is string
+                    && request.resource.data.name.size() <= 120
+                    && request.resource.data.email is string;
+      allow read, update, delete: if isHost();
+    }
+  }
+}
