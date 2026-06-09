@@ -1,6 +1,6 @@
 rules_version = '2';
 
-// Security rules for the Dalhemier Cup site.
+// Security rules for the Dahlheimer Cup site.
 //
 // Guests are anonymous (no login), so the public collections allow open
 // reads/writes — fine for a one-day private party invite. RSVPs are

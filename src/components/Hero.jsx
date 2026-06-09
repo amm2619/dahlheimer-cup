@@ -114,7 +114,7 @@ export default function Hero() {
           color: '#f7f1df',
         }}
       >
-        Brian Dalhemier
+        Brian Dahlheimer
       </h1>
       <p
         style={{

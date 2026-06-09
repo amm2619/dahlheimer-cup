@@ -152,7 +152,7 @@ export default function Rsvp({ party }) {
             <div style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(216,178,74,0.28)', borderRadius: 14, padding: '18px 18px 16px' }}>
               <label style={{ ...labelStyle, marginBottom: 0 }}>Join the putting challenge?</label>
               <p style={{ margin: '6px 0 12px', fontSize: 16, lineHeight: 1.45, color: '#e7dfc6' }}>
-                The <strong style={{ color: '#f7f1df' }}>Dalhemier Cup</strong> is our friendly putting contest with real
+                The <strong style={{ color: '#f7f1df' }}>Dahlheimer Cup</strong> is our friendly putting contest with real
                 prizes. Totally optional — pick "No thanks" and just enjoy the cheese.
               </p>
               <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>

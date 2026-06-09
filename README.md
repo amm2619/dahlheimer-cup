@@ -1,6 +1,6 @@
-# The Dalhemier Cup 🏌️
+# The Dahlheimer Cup 🏌️
 
-Brian Dalhemier's retirement send-off — a single-page invitation site with a
+Brian Dahlheimer's retirement send-off — a single-page invitation site with a
 live countdown, the day's lineup, a putting-contest leaderboard, a "claim your
 job" help list, directions, a photo Wall of Fame, an RSVP form, and a
 Firebase-gated host dashboard.
@@ -75,12 +75,12 @@ push to `main`.
 1. In **Settings → Pages**, set **Source = GitHub Actions**.
 2. Add the `VITE_FIREBASE_*` **secrets** (Settings → Secrets and variables →
    Actions). Optionally add `VITE_BASE` / `VITE_HOST_EMAILS` as **variables**.
-3. Push to `main`. The site publishes at `https://<user>.github.io/dalhemier-cup/`.
+3. Push to `main`. The site publishes at `https://<user>.github.io/dahlheimer-cup/`.
 
 `.github/workflows/ci.yml` builds every pull request as a sanity check (no
 secrets required).
 
-> **Base path:** the build defaults to `base: '/dalhemier-cup/'` for a GitHub
+> **Base path:** the build defaults to `base: '/dahlheimer-cup/'` for a GitHub
 > Pages *project* site. For a custom domain or a user/org Pages site, set
 > `VITE_BASE=/`.
 

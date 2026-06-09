@@ -7,7 +7,7 @@ import { onAuthStateChanged, signInWithPopup, signOut } from 'firebase/auth';
 import { db, auth, googleProvider, isFirebaseConfigured, HOST_EMAILS } from '../firebase.js';
 
 // localStorage keys (used as a fallback when Firebase isn't configured).
-const LS_SCORES = 'dalhemier-cup';
+const LS_SCORES = 'dahlheimer-cup';
 const LS_CLAIMS = 'party-claims';
 const LS_PHOTOS = 'party-photos';
 

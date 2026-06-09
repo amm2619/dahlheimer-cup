@@ -1,9 +1,9 @@
 {
-  "name": "dalhemier-cup",
+  "name": "dahlheimer-cup",
   "private": true,
   "version": "1.0.0",
   "type": "module",
-  "description": "Brian's Retirement Send-Off — The Dalhemier Cup invitation site",
+  "description": "Brian's Retirement Send-Off — The Dahlheimer Cup invitation site",
   "scripts": {
     "dev": "vite",
     "build": "vite build",

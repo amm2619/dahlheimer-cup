@@ -52,7 +52,7 @@ export default function PuttingCup({ party }) {
             color: '#f7f1df',
           }}
         >
-          The Dalhemier Cup
+          The Dahlheimer Cup
         </h2>
         <p style={{ fontStyle: 'italic', fontSize: 18, color: '#e0d4b0', maxWidth: 640, margin: '12px auto 0' }}>
           A putting contest of questionable fairness, open to anyone brave enough. Brian thinks he'll win his own
