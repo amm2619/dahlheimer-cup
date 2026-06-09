@@ -2,7 +2,7 @@ name: CI
 
 # Verifies the app builds on every pull request and on pushes to feature
 # branches. No secrets needed — a build with empty Firebase config still
-# compiles (the app falls back to localStorage / mailto at runtime).
+# compiles; shared data simply isn't persisted until Firebase is configured.
 
 on:
   pull_request:

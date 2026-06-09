@@ -1,7 +1,6 @@
 // Firebase bootstrap. Reads config from Vite env vars (VITE_FIREBASE_*).
-// When the config is absent the app still runs — RSVPs fall back to a
-// mailto: link and the leaderboard / chore claims fall back to localStorage,
-// exactly like the original prototype.
+// Shared data lives only in Firestore; when the config is absent the app
+// still runs, but writes aren't persisted (RSVPs fall back to a mailto: link).
 import { initializeApp } from 'firebase/app';
 import { getAuth, GoogleAuthProvider } from 'firebase/auth';
 import { getFirestore } from 'firebase/firestore';

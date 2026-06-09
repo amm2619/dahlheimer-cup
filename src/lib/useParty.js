@@ -6,39 +6,24 @@ import {
 import { onAuthStateChanged, signInWithPopup, signOut } from 'firebase/auth';
 import { db, auth, googleProvider, isFirebaseConfigured, HOST_EMAILS } from '../firebase.js';
 
-// localStorage keys (used as a fallback when Firebase isn't configured).
-const LS_SCORES = 'dahlheimer-cup';
-const LS_CLAIMS = 'party-claims';
-const LS_PHOTOS = 'party-photos';
-
-function readLS(key, fallback) {
-  try {
-    const v = JSON.parse(localStorage.getItem(key) || 'null');
-    return v == null ? fallback : v;
-  } catch {
-    return fallback;
-  }
-}
-function writeLS(key, val) {
-  try { localStorage.setItem(key, JSON.stringify(val)); } catch { /* ignore */ }
-}
-
 // Central hook: owns every piece of live/shared state for the page and
-// exposes plain action functions. Backed by Firestore when configured,
-// otherwise by localStorage (RSVPs fall back to mailto in the RSVP form).
+// exposes plain action functions. Persistence is the database only — when
+// Firebase is configured, Firestore is the single source of truth. When it
+// isn't, writes update in-memory state for the current session only (nothing
+// is stored on the device); they sync to nobody and don't survive a reload.
 export default function useParty() {
   const live = isFirebaseConfigured;
 
-  const [scores, setScores] = useState(() => (live ? [] : readLS(LS_SCORES, [])));
-  const [claims, setClaims] = useState(() => (live ? {} : readLS(LS_CLAIMS, {})));
-  const [photos, setPhotos] = useState(() => (live ? {} : readLS(LS_PHOTOS, {})));
+  const [scores, setScores] = useState([]);
+  const [claims, setClaims] = useState({});
+  const [photos, setPhotos] = useState({});
   const [rsvps, setRsvps] = useState([]);
 
   const [hostUser, setHostUser] = useState('');
   const [hostDenied, setHostDenied] = useState(false);
   const [fbError, setFbError] = useState('');
 
-  // ---- Firestore subscriptions ----
+  // ---- Firestore subscriptions (the only persistence) ----
   useEffect(() => {
     if (!live) return undefined;
     const unsubs = [];
@@ -90,45 +75,31 @@ export default function useParty() {
       addDoc(collection(db, 'scores'), { name, score, createdAt: serverTimestamp() }).catch(() => {});
       return;
     }
-    const next = scores.concat([{ id: Date.now() + '-' + Math.random().toString(36).slice(2, 6), name, score }]);
-    writeLS(LS_SCORES, next);
-    setScores(next);
+    setScores((prev) => prev.concat([{ id: Date.now() + '-' + Math.random().toString(36).slice(2, 6), name, score }]));
   }
   function removeScore(id) {
     if (live) { deleteDoc(doc(db, 'scores', id)).catch(() => {}); return; }
-    const next = scores.filter((s) => s.id !== id);
-    writeLS(LS_SCORES, next);
-    setScores(next);
+    setScores((prev) => prev.filter((s) => s.id !== id));
   }
 
   // ---- Chore claims ----
   function claim(id, name) {
     if (live) { setDoc(doc(db, 'claims', id), { name, ts: Date.now() }).catch(() => {}); return; }
-    const next = { ...claims, [id]: name };
-    writeLS(LS_CLAIMS, next);
-    setClaims(next);
+    setClaims((prev) => ({ ...prev, [id]: name }));
   }
   function release(id) {
     if (live) { deleteDoc(doc(db, 'claims', id)).catch(() => {}); return; }
-    const next = { ...claims };
-    delete next[id];
-    writeLS(LS_CLAIMS, next);
-    setClaims(next);
+    setClaims((prev) => { const next = { ...prev }; delete next[id]; return next; });
   }
 
   // ---- Wall of Fame photos ----
   function setPhoto(id, url) {
     if (live) { setDoc(doc(db, 'photos', id), { url, ts: Date.now() }).catch(() => {}); return; }
-    const next = { ...photos, [id]: url };
-    writeLS(LS_PHOTOS, next);
-    setPhotos(next);
+    setPhotos((prev) => ({ ...prev, [id]: url }));
   }
   function clearPhoto(id) {
     if (live) { deleteDoc(doc(db, 'photos', id)).catch(() => {}); return; }
-    const next = { ...photos };
-    delete next[id];
-    writeLS(LS_PHOTOS, next);
-    setPhotos(next);
+    setPhotos((prev) => { const next = { ...prev }; delete next[id]; return next; });
   }
 
   // ---- RSVP (returns a promise; rejects so the form can fall back to mailto) ----

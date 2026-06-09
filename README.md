@@ -23,12 +23,14 @@ npm run preview        # preview the production build
 
 ## Backend (Firebase)
 
-The site works with **no backend at all**: leaderboard scores, chore claims,
-and Wall of Fame photos persist to `localStorage`, and the RSVP form opens a
-pre-filled email (`mailto:`). That's the graceful fallback.
+Shared data — the leaderboard, chore claims, Wall of Fame photos, and RSVPs —
+is stored **only in the database (Cloud Firestore)**; there is no local-storage
+copy. Connecting Firebase is therefore **required** for these features to
+persist and sync across guests. Until it's configured, those controls still
+work in the current browser session but nothing is saved or shared (and the
+RSVP form falls back to a pre-filled `mailto:` email).
 
-To make RSVPs/claims/scores/photos **shared live across all guests**, connect a
-Firebase project (Firestore + Google Auth):
+To wire it up (Firestore + Google Auth):
 
 1. Create a Firebase project and a Web App; copy its config.
 2. Enable **Cloud Firestore** and the **Google** sign-in provider (Authentication).
