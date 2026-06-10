@@ -168,6 +168,24 @@ export default function HelpList({ party }) {
           Everyone always asks how they can help — so here it is. Pop your name on a job below and the hosts will see
           you've got it. (No need to check what's taken — the hosts keep the master list and will sort out any overlap.)
         </p>
+        <div
+          style={{
+            display: 'inline-block',
+            maxWidth: 620,
+            margin: '18px auto 0',
+            background: '#fbf7ec',
+            border: '1px solid #e6dcc2',
+            borderRadius: 12,
+            padding: '12px 20px',
+            fontSize: 17,
+            lineHeight: 1.5,
+            color: '#423c2b',
+          }}
+        >
+          And relax, big spender — <strong style={{ color: '#143d2b' }}>we're buying all the food and supplies</strong>.
+          We just need a warm body to put it together or get it done. Bring your hands and your charm; leave the
+          receipts at home.
+        </div>
       </div>
 
       <div
