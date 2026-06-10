@@ -61,8 +61,10 @@ function ChoreCard({ chore, isHost, claimedBy, mineName, onClaim, onRelease }) {
   // Hosts see the real claim state from the database. Guests never see who
   // signed up (the list is host-only); they just see a claim form, plus a
   // local confirmation for jobs they grabbed in this session.
+  // A `closed` task is already handled — it shows as covered with no sign-up.
+  const closed = !!chore.closed;
   const showClaimed = isHost ? !!claimedBy : false;
-  const isClaimed = showClaimed; // controls the green "tasteful" card tint
+  const isClaimed = closed || showClaimed; // controls the green "tasteful" card tint
 
   return (
     <div
@@ -99,7 +101,13 @@ function ChoreCard({ chore, isHost, claimedBy, mineName, onClaim, onRelease }) {
       </div>
       <p style={{ fontSize: 17, lineHeight: 1.5, color: '#423c2b', margin: '0 0 14px', minHeight: 44 }}>{chore.detail}</p>
 
-      {isHost && claimedBy ? (
+      {closed ? (
+        <div style={claimedBox}>
+          <div style={{ color: '#f5efdf', fontSize: 17 }}>
+            <span style={{ color: '#d8b24a', fontWeight: 600 }}>✓ Covered</span> — bartender's on it
+          </div>
+        </div>
+      ) : isHost && claimedBy ? (
         <div style={claimedBox}>
           <div style={{ color: '#f5efdf', fontSize: 17 }}>
             <span style={{ color: '#d8b24a', fontWeight: 600 }}>✓ {claimedBy}</span> has this

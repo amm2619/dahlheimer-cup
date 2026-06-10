@@ -7,7 +7,7 @@ export const CHORES = [
   { id: 'cheese', tag: 'A2', label: 'Cheese Board Curator', detail: 'Three cheeses minimum. One should smell mildly alarming.' },
   { id: 'fruit', tag: 'A3', label: 'Fruit Plate Engineer', detail: 'Slice, fan, arrange. Make it look like a magazine cover.' },
   { id: 'ice', tag: 'B1', label: 'Ice & Cooler Duty', detail: 'Bags of ice, full coolers, cold drinks. The unsung hero.' },
-  { id: 'drinks', tag: 'B2', label: 'Bar & Beverages', detail: 'Stock the drinks. Yes, including the good stuff.' },
+  { id: 'drinks', tag: 'B2', label: 'Cart Girls', detail: 'Drinks delivered course-side, golf-cart style. Already covered — we’ve got our bartender on it.', closed: true },
   { id: 'decor', tag: 'C1', label: 'Decoration Crew', detail: 'Flags, banners, the green setup. Arrive by 1:30 to set up.' },
   { id: 'marshal', tag: 'C2', label: 'Putting Green Marshal', detail: 'Run the Dahlheimer Cup, keep score, settle the disputes.' },
   { id: 'music', tag: 'C3', label: 'Playlist Boss', detail: 'A speaker and a playlist that is not just smooth jazz.' },
