@@ -146,7 +146,9 @@ export default function HostDashboard({ party, onClose }) {
                     }}
                   >
                     <span style={{ fontSize: 16, color: '#f5efdf' }}>{c.label}</span>
-                    {who ? (
+                    {c.closed ? (
+                      <span style={{ fontSize: 16, color: '#d8b24a', fontWeight: 600 }}>covered</span>
+                    ) : who ? (
                       <span style={{ fontSize: 16, color: '#d8b24a', fontWeight: 600 }}>{who}</span>
                     ) : (
                       <span style={{ fontSize: 15, color: '#7f8a78' }}>open</span>
