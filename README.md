@@ -46,11 +46,20 @@ To wire it up (Firestore + Google Auth):
    These are public client identifiers (they ship in the browser bundle); access
    is enforced by the Firestore rules below — not by hiding them.
 
-4. Deploy the security rules in [`firestore.rules`](./firestore.rules):
+4. Deploy the security rules in [`firestore.rules`](./firestore.rules). Either
+   paste the file's contents into the **Firestore → Rules** tab in the console
+   and click **Publish**, or use the Firebase CLI (config is committed in
+   `firebase.json` + `.firebaserc`):
 
    ```bash
+   npm install -g firebase-tools   # once
+   firebase login                  # once
+   firebase use --add              # pick your project, set it as "default"
    firebase deploy --only firestore:rules
    ```
+
+   > `.firebaserc` ships with a `your-firebase-project-id` placeholder —
+   > `firebase use --add` overwrites it with your real project id.
 
 5. Set the **host allow-list**. Hosts who can open the dashboard are defined in
    two places (keep them in sync):
