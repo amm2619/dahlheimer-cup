@@ -100,7 +100,7 @@ export default function Hero() {
       </div>
 
       <p style={{ position: 'relative', fontStyle: 'italic', fontSize: 20, color: '#e0d4b0', margin: '26px 0 6px' }}>
-        After 30-some years, they're finally letting him leave the building.
+        After 42 years, they're finally letting him leave the building.
       </p>
 
       <h1
@@ -139,8 +139,9 @@ export default function Hero() {
           color: '#e7dfc6',
         }}
       >
-        Thirty-odd years, a few thousand spreadsheets, and one famously questionable golf swing later, the man is
-        officially retired. Come help us roast him, toast him, and out-putt him.
+        Forty-two years of government and contracting work, a few thousand spreadsheets, and one famously
+        questionable golf swing later, the man is officially retired. Come help us roast him, toast him, and
+        out-putt him.
       </p>
 
       {/* detail row */}
