@@ -41,7 +41,7 @@ export default function Nav() {
       }}
     >
       <a href="#schedule" style={link}>Schedule</a>
-      <a href="#cup" style={link}>Putting Cup</a>
+      <a href="#cup" style={link}>Dahlheimer Cup</a>
       <a href="#help" style={link}>Help Out</a>
       <a href="#directions" style={link}>Directions</a>
       <a href="#rsvp" style={rsvpLink}>RSVP</a>
